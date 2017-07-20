@@ -33,5 +33,12 @@ getArticles <- function(files_path, data_source = "Scopus"){
 
   # Process SourceTitle column -- why??
 
+  # Article ID column
+  articles_df$Id <- seq(1, nrow(articles_df), 1)
+  articles_df <- articles_df %>% select(Id, Authors:EID)
+
+  # Text processing
+  articles_df$Abstract <- gsub("[^[:alnum:]///' ]", " ", articles_df$Abstract)
+
   return(articles_df)
 }
