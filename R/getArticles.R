@@ -1,3 +1,14 @@
+#' Load and process articles CSV files.
+#'
+#' @param files_path Path to files.
+#' @param data_source Data source..
+#' @return dataframe.
+#' @examples
+#' articles_df <- getArticles(files_path = read_data, data_source = data_source)
+#'
+#' @import dplyr
+#' @import ggplot2
+#'
 getArticles <- function(files_path, data_source = "Scopus"){
 
   # Read in CSV files
@@ -39,6 +50,9 @@ getArticles <- function(files_path, data_source = "Scopus"){
 
   # Text processing
   articles_df$Abstract <- gsub("[^[:alnum:]///' ]", " ", articles_df$Abstract)
+
+  # Print some summaries
+  cat(nrow(articles_df), "articles, spanning", min(articles_df$Year), "to", max(articles_df$Year))
 
   return(articles_df)
 }
