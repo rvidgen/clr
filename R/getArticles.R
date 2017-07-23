@@ -25,12 +25,11 @@ getArticles <- function(files_path, data_source = "Scopus"){
       mutate_at(.vars = vars(Authors:Title, DOI:EID),
                 .funs = funs(as.character)) %>%
       mutate_at(.vars = vars(PageStart, PageEnd),
-                .funs = funs(as.numeric)) %>%
+                .funs = funs(suppressWarnings(as.numeric(.)))) %>%
       mutate_at(.vars = vars(Year, Volume, Issue, ArtNo, PageCount, NumberCites),
-                .funs = funs(as.integer))
+                .funs = funs(suppressWarnings(as.integer(.))))
     return(x)
   }
-
 
   articles_df <- lapply(files_csv, function(x) cleanDFs(x)) %>%
     bind_rows() %>%
@@ -52,7 +51,11 @@ getArticles <- function(files_path, data_source = "Scopus"){
   articles_df$Abstract <- gsub("[^[:alnum:]///' ]", " ", articles_df$Abstract)
 
   # Print some summaries
+  cat(length(files_csv), "data files.")
+  cat("\n")
   cat(nrow(articles_df), "articles, spanning", min(articles_df$Year), "to", max(articles_df$Year))
+  cat("\n")
+  cat('Total of', sum(articles_df$NumberCites), 'citations across', length(unique(articles_df$SourceTitle)), "journals.")
 
   return(articles_df)
 }

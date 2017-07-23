@@ -33,7 +33,8 @@ impactAnalysis <- function(articles_df){
                 arrange(desc(NumberCites)) %>%
                 mutate(cumulative_count = match(Id, unique(Id))) %>%
                 filter(cumulative_count <= NumberCites, !is.na(NumberCites)) %>%
-                summarise(hindex = max(cumulative_count)))
+                summarise(hindex = max(cumulative_count)),
+              by = c("SourceTitle" = "SourceTitle"))
 
   # What does summary do?
 
@@ -66,9 +67,9 @@ topSources <- function(x, n){
 topSources.impactCLR <- function(x, n = 5){
   x$articles_df %>%
     group_by(SourceTitle) %>%
-    summarise(n = n()) %>%
-    arrange(desc(n)) %>%
-    top_n(n)
+    summarise(Count = n()) %>%
+    arrange(desc(Count)) %>%
+    top_n(n, Count)
 }
 
 
