@@ -17,11 +17,18 @@ output_data <- "/Users/duncan/Work/RichardV/Testing/output_folder"
 articles_df <- getArticles(files_path = read_data,
                           data_source = data_source)
 
-
+# Impact analysis
 impact <- impactAnalysis(articles_df = articles_df)
 
+# Plot n articles over time period
 plot(impact)
+
+# Top cited papers
 topCites(impact, n = 10)
+
+# Most common sources
 topSources(impact, n = 6)
 
-head(impact[['impact_by_journal']])
+
+# Structure analysis
+structure <- structureAnalysis(articles_df = articles_df)

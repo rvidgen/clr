@@ -1,23 +1,23 @@
 #' Load and process articles CSV files.
 #'
-#' @param files_path Path to files.
-#' @param data_source Data source..
-#' @return dataframe.
+#' @param articles_df Path to files
+#' @return List
 #' @examples
-#' articles_df <- getArticles(files_path = read_data, data_source = data_source)
+#' impact <- impactAnalysis(articles_df = articles_df)
 #'
 #' @import dplyr
 #' @import ggplot2
-#'
+#' @import stringr
 
 
 impactAnalysis <- function(articles_df){
 
-
+  # Number of articles by year df
   impact_df <- articles_df %>%
     group_by(Year) %>%
     summarise(narticles = n())
 
+  # Df with source, n titles in source, n cites, min year, max year, number of years between, impact score (cites / titles), n papers per year and hindex
   impact_by_journal <- articles_df %>%
     group_by(SourceTitle) %>%
     summarise(Titles = n(),
@@ -33,16 +33,59 @@ impactAnalysis <- function(articles_df){
                 arrange(desc(NumberCites)) %>%
                 mutate(cumulative_count = match(Id, unique(Id))) %>%
                 filter(cumulative_count <= NumberCites, !is.na(NumberCites)) %>%
-                summarise(hindex = max(cumulative_count)),
+                summarise(Hindex = max(cumulative_count)),
               by = c("SourceTitle" = "SourceTitle"))
 
-  # What does summary do?
+  # Format authors vector
+  authors_df <- formatAuthorList(authorVector = articles_df$Authors)
+  authors_df <- as.list(authors_df)
+  names(authors_df) <- articles_df$Id
+  authors_df <- stack(authors_df)[c(2,1)]
+  colnames(authors_df) <- c("Id", "Author")
+  authors_df$Id <- as.numeric(authors_df$Id)
 
-  impact_list <- list(impact_df = impact_df, articles_df = articles_df, impact_by_journal = impact_by_journal)
+  # Count of articles by author
+  authors_art_count <- authors_df %>%
+    group_by(Author) %>%
+    summarise(NumberArticles = n()) %>%
+    arrange(desc(NumberArticles))
+
+  # Sum of cites by author
+  authors_cites <- authors_df %>%
+    left_join(articles_df %>%
+                select(Id, NumberCites)) %>%
+    group_by(Author) %>%
+    summarise(TotalCites = sum(NumberCites, na.rm = T)) %>%
+    arrange(desc(TotalCites))
+
+  # Join
+  authors_stats <- authors_art_count %>%
+    inner_join(authors_cites) %>%
+    mutate(Impact = ifelse(TotalCites > 0 & NumberArticles > 0, TotalCites / NumberArticles, NA)) %>%
+    arrange(desc(Impact)) %>%
+    left_join(authors_df %>%
+                left_join(articles_df %>%
+                            select(Id, NumberCites)) %>%
+                group_by(Author) %>%
+                arrange(desc(NumberCites)) %>%
+                mutate(cumulative_count = match(Id, unique(Id))) %>%
+                filter(cumulative_count <= NumberCites, !is.na(NumberCites)) %>%
+                summarise(Hindex = max(cumulative_count)),
+              by = c("Author" = "Author")) %>%
+    arrange(desc(Hindex))
+
+
+  # Create impactCLR object
+  impact_list <- list(impact_df = impact_df, articles_df = articles_df, impact_by_journal = impact_by_journal, authors_stats = authors_stats)
   class(impact_list) <- "impactCLR"
 
+  # Return object (list) of class impactCLR
   return(impact_list)
 }
+
+##################
+# Object methods #
+##################
 
 plot.impactCLR <- function(impact_list){
   ggplot(impact_list$impact_df, aes(x = Year, y = narticles)) + geom_line()

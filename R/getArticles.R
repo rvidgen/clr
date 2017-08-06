@@ -9,9 +9,10 @@
 #' @import dplyr
 #' @import ggplot2
 #'
+
 getArticles <- function(files_path, data_source = "Scopus"){
 
-  # Read in CSV files
+  # Read in CSV files in files_path
   files <- list.files(path = files_path,
                       pattern = "\\.(csv|CSV)$")
 
