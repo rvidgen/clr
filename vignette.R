@@ -31,4 +31,4 @@ topSources(impact, n = 6)
 
 
 # Structure analysis
-structure <- structureAnalysis(articles_df = articles_df)
+structure <- structureAnalysis(impact_object = impact)

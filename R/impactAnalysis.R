@@ -1,6 +1,6 @@
-#' Load and process articles CSV files.
+#' Perform Impact Analysis
 #'
-#' @param articles_df Path to files
+#' @param articles_df Dataframe of articles. Output from getArticles() function.
 #' @return List
 #' @examples
 #' impact <- impactAnalysis(articles_df = articles_df)
@@ -76,7 +76,7 @@ impactAnalysis <- function(articles_df){
 
 
   # Create impactCLR object
-  impact_list <- list(impact_df = impact_df, articles_df = articles_df, impact_by_journal = impact_by_journal, authors_stats = authors_stats)
+  impact_list <- list(impact_df = impact_df, articles_df = articles_df, impact_by_journal = impact_by_journal, authors_stats = authors_stats, authors_df = authors_df)
   class(impact_list) <- "impactCLR"
 
   # Return object (list) of class impactCLR
