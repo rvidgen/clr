@@ -8,12 +8,15 @@
 #'
 #' @import dplyr
 #' @import igraph
+#' @import ggraph
+#' @import networkD3
 
 
 structureAnalysis <- function(impact_object){
 
   # Create edges df
-  edges_df <- impact_object[['authors_df']] %>% group_by(Id) %>%
+  edges_df <- impact_object[['authors_df']] %>%
+    group_by(Id) %>%
     filter(n()>=2) %>% group_by(Id) %>%
     do(data.frame(t(combn(.$Author, 2)), stringsAsFactors=FALSE)) %>%
     ungroup() %>%
@@ -34,14 +37,14 @@ structureAnalysis <- function(impact_object){
   dg <- decompose.graph(graph_df, max.comp=50)
 
   #
-  comps = t(sapply(seq_along(graph_decomp), function(x) c(Subgraph = x, NodeCount = vcount(graph_decomp[[x]]), EdgeCount = ecount(graph_decomp[[x]]))))
-  cv = as.data.frame(sapply(graph_decomp, vcount))
-  cv$comp = rownames(cv)
+  comps <- t(sapply(seq_along(graph_decomp), function(x) c(Subgraph = x, NodeCount = vcount(graph_decomp[[x]]), EdgeCount = ecount(graph_decomp[[x]]))))
+  cv <- as.data.frame(sapply(graph_decomp, vcount))
+  cv$comp <- rownames(cv)
   colnames(cv) <- c("vcountcomp", "comp")
-  cv = cv[order(cv$vcountcomp,decreasing=TRUE),]
+  cv <- cv[order(cv$vcountcomp,decreasing=TRUE),]
   cv$ID <- seq.int(nrow(cv))
-  main = as.numeric(cv$comp[1])
-  deg = as.data.frame(degree(graph_decomp[[main]]))
+  main <- as.numeric(cv$comp[1])
+  deg <- as.data.frame(degree(graph_decomp[[main]]))
   names(deg) <- 'degree'
 
   getCloseness <- function(dg, x){
@@ -60,21 +63,11 @@ structureAnalysis <- function(impact_object){
 
   component_cites <- apply(cv, 1, function(x) getCloseness(dg = dg, x = x))
 
-  # Plots
-  p1 <- plot(graph_df, layout=layout.auto, vertex.label=NA, edge.label=NA,
-             main='Complete network', vertex.size=3,
-             vertex.color="yellow", edge.color='lightblue')
-
-  l <- layout.kamada.kawai(dg[[main]])
-  p2 <- plot(dg[[main]], layout=l, vertex.label=NA, edge.label=NA,
-             main='Main component', vertex.size=3,
-             vertex.color="yellow", edge.color='lightblue')
-
-  list_of_plots <- lapply()
 
   # Create impactCLR object
-  structure_list <- list(cv = cv, component_cites = component_cites)
+  structure_list <- list(cv = cv, component_cites = component_cites, graph_df = graph_df, edges_df = edges_df, dg_comps = dg, main_comp = main)
   class(structure_list) <- "structureCLR"
+
   return(structure_list)
 }
 
@@ -88,4 +81,49 @@ plot.structureCLR <- function(structure_list, loess = FALSE){
     ggplot(structure_list$cv, aes(x = ID, y = vcountcomp)) + geom_point() + geom_line() +
       theme_minimal() + xlab("Component") + ylab("Size")
   }
+}
+
+showGraphs <- function(structure_list, main_only = FALSE, dynamic = FALSE){
+  if(main_only){
+    p1 <- ggraph(structure_list$dg[[structure_list$main]], layout = 'kk') +
+        geom_edge_fan(aes(alpha = ..index..), show.legend = FALSE) +
+        geom_node_point() +
+        theme_graph(foreground = 'steelblue', fg_text_colour = 'white')
+  }else{
+    if(dynamic){
+      vertices <- data.frame(
+        name = V(structure_list$graph_df)$name,
+        group = edge.betweenness.community(structure_list$graph_df)$membership,
+        betweenness = (betweenness(structure_list$graph_df,directed=F,normalized=T)*115)+0.1
+      )
+
+      df <- data.frame(source.index = match(structure_list$edges_df$Auth1, vertices$name)-1,
+                       target.index = match(structure_list$edges_df$Auth2, vertices$name)-1)
+
+      p1 <- forceNetwork(Links = df, Nodes = vertices,
+                         Source = 'source.index', Target = 'target.index',
+                         NodeID = 'name',
+                         Group = 'group',
+                         charge = -1,
+                         linkDistance = 20,
+                         zoom = F,
+                         opacity = 1,
+                         fontSize=24)
+    }else{
+      p1 <- ggraph(structure_list$graph_df) +
+        geom_edge_fan(aes(alpha = ..index..), show.legend = FALSE) +
+        geom_node_point() +
+        theme_graph(foreground = 'steelblue', fg_text_colour = 'white')
+    }
+  }
+  show(p1)
+}
+
+graphComponents <- function(structure_list, n = 1){
+  ggraph(structure_list$dg_comps[[as.numeric(structure_list$cv$comp[structure_list$cv$ID==n])]], layout = 'kk') +
+    geom_edge_fan(aes(alpha = ..index..), show.legend = FALSE) +
+    geom_node_point() +
+    geom_node_text(aes(label = name)) +
+    theme_graph(foreground = 'steelblue', fg_text_colour = 'white') +
+    ggtitle(paste0("Co-authorship component ", n))
 }

@@ -33,3 +33,13 @@ topSources(impact, n = 6)
 structure <- structureAnalysis(impact_object = impact)
 
 plot(structure, loess = T)
+
+showGraphs(structure)
+
+graphComponents(structure, n = 5)
+
+
+writeCLRFiles(structure_list = structure,
+              impact_list = impact,
+              gml_name = 'coauth.gml',
+              )

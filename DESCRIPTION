@@ -9,5 +9,5 @@ Description: Impact, Structure and Content Analyses
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: dplyr, ggplot2, stringr, igraph, tibble
+Imports: dplyr, ggplot2, stringr, tibble, igraph, ggraph, networkD3
 RoxygenNote: 6.0.1
