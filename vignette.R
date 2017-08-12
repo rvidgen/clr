@@ -29,6 +29,7 @@ topCites(impact, n = 10)
 # Most common sources
 topSources(impact, n = 6)
 
-
 # Structure analysis
 structure <- structureAnalysis(impact_object = impact)
+
+plot(structure, loess = T)
