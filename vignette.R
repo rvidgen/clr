@@ -32,14 +32,20 @@ topSources(impact, n = 6)
 # Structure analysis
 structure <- structureAnalysis(impact_object = impact)
 
+# Components vs Size
 plot(structure, loess = T)
 
+# Plot structure node : edges
 showGraphs(structure)
 
+# Plot components
 graphComponents(structure, n = 5)
 
+# Write files
+# writeStrFiles(structure_list = structure,
+#               impact_list = impact,
+#               gml_name = 'coauth.gml',
+#               )
 
-writeCLRFiles(structure_list = structure,
-              impact_list = impact,
-              gml_name = 'coauth.gml',
-              )
+
+

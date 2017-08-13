@@ -64,7 +64,7 @@ structureAnalysis <- function(impact_object){
   component_cites <- apply(cv, 1, function(x) getCloseness(dg = dg, x = x))
 
 
-  # Create impactCLR object
+  # Create structureCLR object
   structure_list <- list(cv = cv, component_cites = component_cites, graph_df = graph_df, edges_df = edges_df, dg_comps = dg, main_comp = main)
   class(structure_list) <- "structureCLR"
 
