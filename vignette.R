@@ -53,3 +53,22 @@ graphComponents(structure, n = 5)
 ##### Content analysis
 
 words_to_remove <- c()
+
+# Content analysis
+content <- contentAnalysis(articles_df =  articles_df, k = 10)
+
+# Word cloud
+wordCloud(content)
+
+# Top words in corpus
+topNWordsInDoc(content, n = 10)
+
+# Plot top words
+topNWordsInDoc(content, n = 10, plot = TRUE)
+
+# Top n words in topics
+topNWordsInTopic(content, n = 3)
+
+# Plot top n words in topics
+topNWordsInTopic(content, n = 3, plot = TRUE)
+
