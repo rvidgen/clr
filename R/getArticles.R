@@ -1,5 +1,7 @@
 #' Load and process articles CSV files.
 #'
+#' Loads and processes articles CSV files from a folder containing them.
+#'
 #' @param files_path Path to files.
 #' @param data_source Data source (placeholder)
 #' @return dataframe.

@@ -10,8 +10,6 @@ library(clR)
 # Set parameters
 read_data <- "/Users/duncan/Work/RichardV/Testing/input_files"
 data_source <- "Scopus"
-output_data <- "/Users/duncan/Work/RichardV/Testing/output_folder"
-
 
 
 ##### Load data files
