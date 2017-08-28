@@ -1,11 +1,32 @@
 #' Perform Content Analysis
 #'
+#' Perform content analysis; build LDA model on abstract text
+#'
 #' @param articles_df Dataframe of articles. Output from getArticles() function.
 #' @param k Number of topics
+#' @param words_to_remove (Optional) Additional stopwords to be removed
 #' @return List
 #' @examples
-#' structure <- structureAnalysis(impact_object = impact)
-#' plot(structure, loess = TRUE)
+#' content <- contentAnalysis(articles_df =  articles_df, k = 10)
+#'
+#' # Add your own stop words
+#' words_to_remove <- c("stopword1", "stopword2")
+#' content <- contentAnalysis(articles_df =  articles_df, k = 10, words_to_remove = words_to_remove)
+#'
+#' # Word cloud
+#' wordCloud(content)
+#'
+#' # Top words in corpus
+#' topNWordsInDoc(content, n = 10)
+#'
+#' # Plot top words
+#' topNWordsInDoc(content, n = 10, plot = TRUE)
+#'
+#' # Top n words in topics
+#' topNWordsInTopic(content, n = 3)
+#'
+#' # Plot top n words in topics
+#' topNWordsInTopic(content, n = 3, plot = TRUE)
 #'
 #' @import dplyr
 #' @import tidyr
@@ -15,14 +36,19 @@
 #' @import stringr
 #' @import topicmodels
 #' @import wordcloud
+#' @import RColorBrewer
 #'
 #' Borrows from http://tidytextmining.com/_book/topicmodeling.html
 
 
-contentAnalysis <- function(articles_df, k){
+contentAnalysis <- function(articles_df, k, words_to_remove){
 
   # Load stopwords
-  get("stop_words")
+  data("stop_words")
+
+  if(!is.null(words_to_remove)){stop_words <- bind_rows(stop_words,
+                                                        data_frame(word = words_to_remove,
+                                                                   lexicon = "custom")) }
 
   # Get Id / Source / Word DF, tokensize
   by_doc_word <- articles_df %>%
@@ -108,7 +134,9 @@ topNWordsInDoc <- function(content_clr, n, plot = FALSE){
       ggplot(aes(word, n)) +
         geom_col() +
         xlab(NULL) +
-        coord_flip()
+        ylab("Count") +
+        coord_flip() +
+        theme_minimal()
   }else{
     output <- top_n_words
   }

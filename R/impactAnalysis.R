@@ -1,14 +1,23 @@
 #' Perform Impact Analysis
 #'
+#' Perform impact analysis on articles dataframe
+#'
 #' @param articles_df Dataframe of articles. Output from getArticles() function.
 #' @return List
 #' @examples
 #' impact <- impactAnalysis(articles_df = articles_df)
+#' plot(impact)
+#'
+#' # Top cited papers
+#' topCites(impact, n = 10)
+#'
+#' # Most common sources
+#' topSources(impact, n = 6)
 #'
 #' @import dplyr
 #' @import ggplot2
 #' @import stringr
-
+#' @export
 
 impactAnalysis <- function(articles_df){
 
@@ -88,7 +97,7 @@ impactAnalysis <- function(articles_df){
 ##################
 
 plot.impactCLR <- function(impact_list){
-  ggplot(impact_list$impact_df, aes(x = Year, y = narticles)) + geom_line()
+  ggplot(impact_list$impact_df, aes(x = Year, y = narticles)) + geom_line() + ylab("Number of Articles") + theme_minimal() + ggtitle("Articles published by Year")
 }
 
 

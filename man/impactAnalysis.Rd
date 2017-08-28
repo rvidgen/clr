@@ -2,22 +2,27 @@
 % Please edit documentation in R/impactAnalysis.R
 \name{impactAnalysis}
 \alias{impactAnalysis}
-\title{Load and process articles CSV files.}
+\title{Perform Impact Analysis}
 \usage{
 impactAnalysis(articles_df)
 }
 \arguments{
-\item{files_path}{Path to files.}
-
-\item{data_source}{Data source..}
+\item{articles_df}{Dataframe of articles. Output from getArticles() function.}
 }
 \value{
-dataframe.
+List
 }
 \description{
-Load and process articles CSV files.
+Perform impact analysis on articles dataframe
 }
 \examples{
-articles_df <- getArticles(files_path = read_data, data_source = data_source)
+impact <- impactAnalysis(articles_df = articles_df)
+plot(impact)
+
+# Top cited papers
+topCites(impact, n = 10)
+
+# Most common sources
+topSources(impact, n = 6)
 
 }

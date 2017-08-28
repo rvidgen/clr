@@ -1,10 +1,20 @@
 #' Perform Structure Analysis
 #'
+#' Perform structure analysis on impactCLR object
+#'
 #' @param articles_df Path to files
 #' @return List
 #' @examples
 #' structure <- structureAnalysis(impact_object = impact)
-#' plot(structure, loess = TRUE)
+#'
+#' # Components vs Size
+#' plot(structure, loess = T)
+#'
+#' # Plot structure node : edges
+#' showGraphs(structure)
+#'
+#' # Plot components
+#' graphComponents(structure, n = 5)
 #'
 #' @import dplyr
 #' @import igraph

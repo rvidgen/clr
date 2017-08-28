@@ -13,9 +13,11 @@ data_source <- "Scopus"
 output_data <- "/Users/duncan/Work/RichardV/Testing/output_folder"
 
 
+
 ##### Load data files
 articles_df <- getArticles(files_path = read_data,
                           data_source = data_source)
+
 
 
 ##### Impact analysis
@@ -31,6 +33,7 @@ topCites(impact, n = 10)
 topSources(impact, n = 6)
 
 
+
 ##### Structure analysis
 structure <- structureAnalysis(impact_object = impact)
 
@@ -43,19 +46,14 @@ showGraphs(structure)
 # Plot components
 graphComponents(structure, n = 5)
 
-# Write files
-# writeStrFiles(structure_list = structure,
-#               impact_list = impact,
-#               gml_name = 'coauth.gml',
-#               )
 
 
 ##### Content analysis
 
-words_to_remove <- c()
+words_to_remove <- c("one")
 
 # Content analysis
-content <- contentAnalysis(articles_df =  articles_df, k = 10)
+content <- contentAnalysis(articles_df =  articles_df, k = 10, words_to_remove = words_to_remove)
 
 # Word cloud
 wordCloud(content)
@@ -72,3 +70,11 @@ topNWordsInTopic(content, n = 3)
 # Plot top n words in topics
 topNWordsInTopic(content, n = 3, plot = TRUE)
 
+
+# Outputting results
+
+# Write files
+# writeStrFiles(structure_list = structure,
+#               impact_list = impact,
+#               gml_name = 'coauth.gml',
+#               )

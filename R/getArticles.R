@@ -1,7 +1,7 @@
 #' Load and process articles CSV files.
 #'
 #' @param files_path Path to files.
-#' @param data_source Data source..
+#' @param data_source Data source (placeholder)
 #' @return dataframe.
 #' @examples
 #' articles_df <- getArticles(files_path = read_data, data_source = data_source)
@@ -9,6 +9,7 @@
 #' @import dplyr
 #' @import ggplot2
 #'
+#' @export
 
 getArticles <- function(files_path, data_source = "Scopus"){
 

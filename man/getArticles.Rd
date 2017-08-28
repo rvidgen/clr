@@ -9,7 +9,7 @@ getArticles(files_path, data_source = "Scopus")
 \arguments{
 \item{files_path}{Path to files.}
 
-\item{data_source}{Data source..}
+\item{data_source}{Data source (placeholder)}
 }
 \value{
 dataframe.
