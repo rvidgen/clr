@@ -71,10 +71,3 @@ topNWordsInTopic(content, n = 3)
 topNWordsInTopic(content, n = 3, plot = TRUE)
 
 
-# Outputting results
-
-# Write files
-# writeStrFiles(structure_list = structure,
-#               impact_list = impact,
-#               gml_name = 'coauth.gml',
-#               )
