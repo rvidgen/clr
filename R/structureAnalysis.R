@@ -81,6 +81,11 @@ structureAnalysis <- function(impact_object){
   return(structure_list)
 }
 
+# Str
+str.structureCLR <- function(structure_list){
+  str_object <- structure_list[c('cv', 'component_cites', 'graph_df', 'edges_df')]
+  return(utils::str(str_object))
+}
 
 # Plot componentz vs size
 plot.structureCLR <- function(structure_list, loess = FALSE){
@@ -95,7 +100,7 @@ plot.structureCLR <- function(structure_list, loess = FALSE){
 
 showGraphs <- function(structure_list, main_only = FALSE, dynamic = FALSE){
   if(main_only){
-    p1 <- ggraph(structure_list$dg[[structure_list$main]], layout = 'kk') +
+    p1 <- ggraph(structure_list$dg_comps[[structure_list$main]], layout = 'kk') +
         geom_edge_fan(aes(alpha = ..index..), show.legend = FALSE) +
         geom_node_point() +
         theme_graph(foreground = 'steelblue', fg_text_colour = 'white')
@@ -121,9 +126,9 @@ showGraphs <- function(structure_list, main_only = FALSE, dynamic = FALSE){
                          fontSize=24)
     }else{
       p1 <- ggraph(structure_list$graph_df) +
-        geom_edge_fan(aes(alpha = ..index..), show.legend = FALSE) +
-        geom_node_point() +
-        theme_graph(foreground = 'steelblue', fg_text_colour = 'white')
+            geom_edge_fan(aes(alpha = ..index..), show.legend = FALSE) +
+            geom_node_point() +
+            theme_graph(foreground = 'steelblue', fg_text_colour = 'white')
     }
   }
   show(p1)

@@ -34,6 +34,7 @@ topSources(impact, n = 6)
 
 ##### Structure analysis
 structure <- structureAnalysis(impact_object = impact)
+str(structure)
 
 # Components vs Size
 plot(structure, loess = T)
