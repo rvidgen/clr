@@ -139,6 +139,6 @@ graphComponents <- function(structure_list, n = 1){
     geom_edge_fan(aes(alpha = ..index..), show.legend = FALSE) +
     geom_node_point() +
     geom_node_text(aes(label = name)) +
-    theme_graph(foreground = 'steelblue', fg_text_colour = 'white') +
+    theme_graph(foreground = 'steelblue', fg_text_colour = 'white', base_family="sans") +
     ggtitle(paste0("Co-authorship component ", n))
 }
