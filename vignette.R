@@ -8,7 +8,7 @@
 library(clR)
 
 # Set parameters
-read_data <- "/Users/duncan/Work/RichardV/Testing/inputs_test_2/csvfiles"
+read_data <- "/Users/duncan/Work/RichardV/PC"
 data_source <- "Scopus"
 
 
