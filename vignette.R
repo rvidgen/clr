@@ -8,7 +8,7 @@
 library(clR)
 
 # Set parameters
-read_data <- "/Users/duncan/Work/RichardV/PC"
+read_data <- "/Users/ ... /data"
 data_source <- "Scopus"
 
 
