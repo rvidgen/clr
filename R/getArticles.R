@@ -23,6 +23,7 @@ getArticles <- function(files_path, data_source = "Scopus"){
 
   # Remove BOM encoding
   files_csv <- lapply(files_csv, function(x) setNames(x, sub("ï..", "", names(x))))
+  files_csv <- lapply(files_csv, function(x) setNames(x, sub("X...", "", names(x))))
 
 
   # files_csv <- suppressWarnings(lapply(files, function(x) read.csv(file = paste(read_data, x, sep = "/"), stringsAsFactors = FALSE,
