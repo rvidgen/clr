@@ -1,3 +1,10 @@
+#' Sanitizes the author list
+#'
+#' @param authorVector
+#' @import stringr
+#' @import magrittr
+#' @return Vector
+
 formatAuthorList <- function(authorVector){
 
   fix_spaces <- function(x){
@@ -12,12 +19,13 @@ formatAuthorList <- function(authorVector){
     gsub(",", "", x, fixed = TRUE)
   }
 
-  auths = strsplit(authorVector, ".,", fixed=T)
-  auths = lapply(auths, str_trim)
-  auths = lapply(auths, function(z) z[!is.na(as.logical(sapply(z, function(x) grep(' ', x))))])
-  auths = lapply(auths, fix_spaces)
-  auths = lapply(auths, fix_periods)
-  auths = lapply(auths, fix_commas)
+  auths = strsplit(authorVector, ".,", fixed=T) %>%
+    lapply(str_trim) %>%
+    # The next line should be extracted into a named function as well in order to understand its functionality
+    lapply(function(z) z[!is.na(as.logical(sapply(z, function(x) grep(' ', x))))]) %>%
+    lapply(fix_spaces) %>%
+    lapply(fix_periods) %>%
+    lapply(fix_commas)
 
   return(auths)
 }
