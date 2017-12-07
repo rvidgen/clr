@@ -19,14 +19,11 @@ getArticles <- function(files_path, data_source = "Scopus"){
   files <- list.files(path = files_path,
                       pattern = "\\.(csv|CSV)$")
 
-  files_csv <- suppressWarnings(lapply(files, function(x) read.csv(file = paste(read_data, x, sep = "/"), stringsAsFactors = FALSE)))
+  files_csv <- suppressWarnings(lapply(files, function(x) read.csv(file = paste(files_path, x, sep = "/"), stringsAsFactors = FALSE)))
 
   # Remove BOM encoding
   files_csv <- lapply(files_csv, function(x) setNames(x, sub("ï..", "", names(x))))
-
-
-  # files_csv <- suppressWarnings(lapply(files, function(x) read.csv(file = paste(read_data, x, sep = "/"), stringsAsFactors = FALSE,
-  #                                                                  fileEncoding = 'UTF-8-BOM')))
+  files_csv <- lapply(files_csv, function(x) setNames(x, sub("X...", "", names(x))))
 
   # Change column names and classes, bind and remove duplicates
   cleanDFs <- function(x){

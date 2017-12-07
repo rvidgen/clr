@@ -2,7 +2,7 @@
 #'
 #' Perform structure analysis on impactCLR object
 #'
-#' @param articles_df Path to files
+#' @param impact_object Impact object. Output from impactAnalysis() function.
 #' @return List
 #' @examples
 #' structure <- structureAnalysis(impact_object = impact)
